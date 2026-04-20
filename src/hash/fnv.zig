@@ -68,7 +68,7 @@ pub const Fnv32 = struct {
     };
 
     state: u32,
-    io: Writer.Hashing(Hasher) = undefined,
+    hash_writer: Writer.Hashing(Hasher) = undefined,
     io_buf: [256]u8 = undefined,
 
     /// Digest length in bytes (`4`).
@@ -140,8 +140,8 @@ pub const Fnv32 = struct {
 
     /// Hashing writer; **flush** before reading digest.
     pub fn writer(self: *Fnv32) *Writer {
-        self.io = Writer.Hashing(Hasher).initHasher(.{ .h = self }, self.io_buf[0..]);
-        return &self.io.writer;
+        self.hash_writer = .initHasher(.{ .h = self }, self.io_buf[0..]);
+        return &self.hash_writer.writer;
     }
 
     /// Vtable: [`hash_interface.Hash32.reset`].

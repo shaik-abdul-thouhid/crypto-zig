@@ -164,8 +164,8 @@ pub const Digest = struct {
 
     crc: u64,
     tab: *const Table,
-    io: Writer.Hashing(Crc64Hasher) = undefined,
-    io_buf: [256]u8 = undefined,
+    hash_writer: Writer.Hashing(Crc64Hasher) = undefined,
+    buf: [256]u8 = undefined,
 
     /// Initial state (crc = 0) for `tab`.
     pub fn init(tab: *const Table) Digest {
@@ -267,8 +267,8 @@ pub const Digest = struct {
 
     /// Hashing writer; **flush** after the last write so buffered bytes are folded into the CRC.
     pub fn writer(self: *Digest) *Writer {
-        self.io = Writer.Hashing(Crc64Hasher).initHasher(.{ .digest = self }, self.io_buf[0..]);
-        return &self.io.writer;
+        self.hash_writer = .initHasher(.{ .digest = self }, self.buf[0..]);
+        return &self.hash_writer.writer;
     }
 
     /// Vtable: [`hash_interface.Hash64.writer`].

@@ -24,7 +24,7 @@ pub const Adler32 = struct {
     };
 
     digest: u32,
-    io: Writer.Hashing(AdlerHasher) = undefined,
+    hash_writer: Writer.Hashing(AdlerHasher) = undefined,
     io_buf: [256]u8 = undefined,
 
     const Size = 4;
@@ -83,8 +83,8 @@ pub const Adler32 = struct {
 
     /// Hashing writer; **flush** after the last write before reading the digest.
     pub fn writer(self: *Adler32) *Writer {
-        self.io = Writer.Hashing(AdlerHasher).initHasher(.{ .adler = self }, self.io_buf[0..]);
-        return &self.io.writer;
+        self.hash_writer = .initHasher(.{ .adler = self }, self.io_buf[0..]);
+        return &self.hash_writer.writer;
     }
 
     /// Vtable hook for [`hash_interface.Hash.writer`].
