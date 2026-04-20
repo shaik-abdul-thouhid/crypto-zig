@@ -4,7 +4,6 @@
 //! [`ieee_poly`] and [`castagnoli_poly`]. These routines are the fallback when hardware CRC is
 //! unavailable and the building blocks for custom polynomials.
 const std = @import("std");
-const types = @import("types.zig");
 
 pub const Table = [256]u32;
 pub const Slicing8Table = [8]Table;
